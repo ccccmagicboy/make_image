@@ -8,14 +8,14 @@ def send_cmd(command):
     print(result_str)
     return result_str
 
-OFFSET_BOOTLOADER = int(os.environ['BOOTLOADER_OFFSET'], 16)
+OFFSET_BOOTLOADER = int(os.environ['INPUT_BOOTLOADER_OFFSET'], 16)
 
 files_in = [
-    ('bootloader', OFFSET_BOOTLOADER, os.environ['BOOTLOADER_PATH']),
-    ('application', int(os.environ['MARLIN_OFFSET'], 16), os.environ['MARLIN_PATH']),
+    ('bootloader', OFFSET_BOOTLOADER, os.environ['INPUT_BOOTLOADER_PATH']),
+    ('application', int(os.environ['INPUT_MARLIN_OFFSET'], 16), os.environ['INPUT_MARLIN_PATH']),
 ]
 
-file_out = os.environ['FILE_OUTPUT_NAME']
+file_out = os.environ['INPUT_FILE_OUTPUT_NAME']
 
 cur_offset = OFFSET_BOOTLOADER
 with open(file_out, 'wb') as fout:
