@@ -1,0 +1,41 @@
+#===================================================================================
+# Lisence: MIT
+# Author: ccccmagicboy
+# Url: https://ccrobot-online.com
+#===================================================================================
+
+name: CI
+
+on: [push]
+
+env:
+  BOARD: BOARD_CCROBOT_MEEB_3DP
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-18.04
+  
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout this repos
+      uses: actions/checkout@v2
+      with:
+        ref: master    
+    
+    - name: Do real test
+      id: testbench
+      uses: ccccmagicboy/Marlin_config@master
+      with:
+        BOARD: $BOARD
+
+    - name: Print the result
+      run: |
+        echo ${{ steps.testbench.outputs.RESULT }}
+      shell: bash
+        
+        
+        
