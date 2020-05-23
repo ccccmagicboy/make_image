@@ -9,8 +9,12 @@ name: CI
 on: [push]
 
 env:
-  BOARD: BOARD_CCROBOT_MEEB_3DP
-
+  BOOTLOADER_PATH: 'bootloader/bootloader_meeb_3dp.bin'
+  BOOTLOADER_OFFSET: '0x0'
+  MARLIN_PATH: 'Marlin_v2/firmware.bin'
+  MARLIN_OFFSET: '0x2000'
+  FILE_OUTPUT_NAME: 'Marlin_v2/firmware_with_bootloader.bin'
+  
 jobs:
   build:
     strategy:
@@ -28,10 +32,14 @@ jobs:
     
     - name: Do real test
       id: testbench
-      uses: ccccmagicboy/Marlin_config@master
+      uses: ccccmagicboy/make_image@master
       with:
-        BOARD: $BOARD
-
+        BOOTLOADER_PATH: $BOOTLOADER_PATH
+        BOOTLOADER_OFFSET: $BOOTLOADER_OFFSET
+        MARLIN_PATH: $MARLIN_PATH
+        MARLIN_OFFSET: $MARLIN_OFFSET
+        FILE_OUTPUT_NAME: $FILE_OUTPUT_NAME
+        
     - name: Print the result
       run: |
         echo ${{ steps.testbench.outputs.RESULT }}

@@ -1,42 +1,30 @@
 import os
 import sys
-import subprocess
-import shlex
 from termcolor import colored
 
-def replaceAll(file,searchExp,replaceExp):
-    for line in fileinput.input(file, inplace=1):
-        if searchExp in line:
-            line = line.replace(searchExp,replaceExp)
-        sys.stdout.write(line)
+OFFSET_BOOTLOADER = int(os.environ['BOOTLOADER_OFFSET'], 16)
 
-def send_cmd(command):
-    print(command)
-    result_str =os.popen(command).read()
-    print(result_str)
-    return result_str
+files_in = [
+    ('bootloader', OFFSET_BOOTLOADER, os.environ['BOOTLOADER_PATH']),
+    ('application', int(os.environ['MARLIN_OFFSET'], 16), os.environ['MARLIN_PATH']),
+]
 
-print(os.getcwd())
-print(os.listdir(os.getcwd()))
+file_out = os.environ['FILE_OUTPUT_NAME']
 
-send_cmd('chmod +x {0:s}/my_marlin/buildroot/bin/*'.format(os.getcwd()))
-sys.path.append('{0:s}/my_marlin/buildroot/bin'.format(os.getcwd()))
-print(sys.path)
-os.chdir('my_marlin')
+cur_offset = OFFSET_BOOTLOADER
+with open(file_out, 'wb') as fout:
+    for name, offset, file_in in files_in:
+        assert offset >= cur_offset
+        fout.write(b'\xff' * (offset - cur_offset))
+        cur_offset = offset
+        with open(file_in, 'rb') as fin:
+            data = fin.read()
+            fout.write(data)
+            cur_offset += len(data)
+            print(colored('%-12s% 8d' % (name, len(data)), "green"))
+    print(colored('%-12s% 8d' % ('total', cur_offset), "green"))
 
-# replaceAll(mk_path, "#webrepl.start()","import machine;".format(str))
-
-subprocess.call(['{0:s}/buildroot/bin/restore_configs'.format(os.getcwd())])
-########################################################################################################################
-subprocess.call(shlex.split('{0:s}/buildroot/bin/opt_set MOTHERBOARD {1:s}'.format(os.getcwd(), os.environ['BOARD'])))
-print(colored('The select board is {0:s}'.format(os.environ['BOARD']), "green"))
-########################################################################################################################
-
-########################################################################################################################
-
-########################################################################################################################
-
-str = '0000'
+str = '0001'
 if None != str:
     send_cmd('echo ::set-output name=RESULT::{0:s}'.format(str))
 

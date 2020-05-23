@@ -1,10 +1,26 @@
-name: 'Marlin_firmware_config_tool'
-description: 'Use it to set your own custome Configuration.h/Configuration_adv.h file.'
+name: 'make image tool'
+description: 'Use it to join the marlin firmware and bootloader images.'
 inputs:
-  BOARD:
-    description: 'input the board name'
+  BOOTLOADER_PATH:
+    description: 'input the path of bootloader image.'
     required: true
-    default: 'BOARD_CCROBOT_MEEB_3DP'
+    default: 'xxx'
+  BOOTLOADER_OFFSET:
+    description: 'input the offset value of bootloader image.'
+    required: true
+    default: '0x0'
+  MARLIN_PATH:
+    description: 'input the path of marlin image.'
+    required: true
+    default: 'xxx'
+  MARLIN_OFFSET:
+    description: 'input the offset value of marlin image.'
+    required: true
+    default: '0x2000'  
+  FILE_OUTPUT_NAME:
+    description: 'input the file path of the final image file.'
+    required: true
+    default: 'xxx'      
 outputs:
   RESULT: #
     description: 'output result string'
