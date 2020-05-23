@@ -2,6 +2,12 @@ import os
 import sys
 from termcolor import colored
 
+def send_cmd(command):
+    print(command)
+    result_str =os.popen(command).read()
+    print(result_str)
+    return result_str
+
 OFFSET_BOOTLOADER = int(os.environ['BOOTLOADER_OFFSET'], 16)
 
 files_in = [
